@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: winhd
+  namespace: router
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 15Gi
+  storageClassName: standard
+---
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
+metadata:
+  name: win10-iot
+  namespace: router
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: win10-iot
+    spec:
+      terminationGracePeriodSeconds: 0
+      domain:
+        cpu:
+          model: host-passthrough
+        devices:
+          disks:
+          - cdrom:
+              bus: sata
+              readonly: true
+            bootOrder: 1
+            name: pe
+          - disk:
+              bus: virtio
+            name: iot
+          - cdrom:
+              bus: sata
+            name: virtiodriver
+        machine:
+          type: q35
+        resources:
+          requests:
+            memory: 2G
+      volumes:
+      - name: iot
+        dataVolume:
+          name: windows10-iot
+      - name: pe
+        dataVolume:
+          name: w81pe
+#      - name: cdromiso
+#        persistentVolumeClaim:
+#          claimName: active
+#      - name: harddrive
+#        persistentVolumeClaim:
+#          claimName: winhd
+      - containerDisk:
+          image: kubevirt/virtio-container-disk
+        name: virtiodriver

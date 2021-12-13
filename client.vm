@@ -1,0 +1,45 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: clientvm
+  namespace: router
+spec:
+  running: true
+  template:
+    metadata:
+      labels:
+        kubevirt.io/size: small
+        kubevirt.io/domain: client
+    spec:
+      domain:
+        cpu:
+          model: host-passthrough
+        resources:
+          requests:
+            memory: 1024M
+        devices:
+          interfaces:
+          - name: private-net
+            bridge: {}
+          disks:
+          - name: containerdisk
+            disk:
+              bus: virtio
+          - name: cloudinitdisk
+            disk:
+              bus: virtio
+      networks:
+      - name: private-net
+        multus:
+#          default: true
+          networkName: router/br-conf-1
+      volumes:
+        - name: containerdisk
+          containerDisk:
+            image: quay.io/kubevirt/fedora-cloud-registry-disk-demo
+        - name: cloudinitdisk
+          cloudInitNoCloud: 
+#            userDataBase64: $(cat startup-script.sh | base64 -w0)
+#            userDataBase64: $(cat cloudinit | base64 -w0)
+            secretRef:
+              name: cloudinit

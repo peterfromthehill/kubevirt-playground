@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-from-client
+  namespace: router
+spec:
+  podSelector:
+    matchLabels:
+      kubevirt.io/domain: client
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress: []
+  egress: []

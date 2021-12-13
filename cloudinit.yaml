@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  userdata: $(cat cloudinit | base64 -w 0)
+kind: Secret
+metadata:
+  name: cloudinit
+  namespace: router

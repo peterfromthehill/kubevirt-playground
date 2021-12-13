@@ -1,0 +1,50 @@
+# This example assumes you are using a default storage class
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: windows10-iot
+  namespace: router
+spec:
+  source:
+      http:
+         url: "https://www.1qay.net/Windows10_IoTCore_MBM_x64_en-us_17763Oct.iso"
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1024Mi
+---
+# This example assumes you are using a default storage class
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: w81pe
+  namespace: router
+spec:
+  source:
+      http:
+         url: "http://www.socket.ru/~fisky/Boot%20flash/HBCD/WinPE/W81PE.iso"
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 256Mi
+---
+# This example assumes you are using a default storage class
+apiVersion: cdi.kubevirt.io/v1beta1
+kind: DataVolume
+metadata:
+  name: active
+  namespace: router
+spec:
+  source:
+      http:
+         url: "http://www.socket.ru/~fisky/Boot%20flash/HBCD/WinPE/Active.iso"
+  pvc:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 200Mi
